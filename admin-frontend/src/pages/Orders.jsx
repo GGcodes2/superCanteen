@@ -7,10 +7,7 @@ import { io } from "socket.io-client";
 const SOCKET_URL =
   import.meta?.env?.VITE_SOCKET_URL || "https://supercanteen-backend.onrender.com";
 
-const socket = io(SOCKET_URL, {
-  transports: ["websocket"],
-  withCredentials: true,
-});
+const socket = io(SOCKET_URL);
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
