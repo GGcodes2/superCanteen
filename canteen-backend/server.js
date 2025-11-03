@@ -23,6 +23,12 @@ export const io = new Server(httpServer, {
   },
 });
 
+app.use(cors({
+  origin: ["http://localhost:5174", "https://your-frontend-domain.vercel.app", "https://super-canteen-beta.vercel.app/"],
+  credentials: true,
+}));
+
+
 // 🧩 Middlewares
 app.use(cors());
 app.use(express.json());
