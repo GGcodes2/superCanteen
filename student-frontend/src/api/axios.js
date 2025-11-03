@@ -2,13 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: "https://supercanteen-backend.onrender.com/api",
-});
-
-// Add token to headers automatically
-API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
-  if (token) req.headers.Authorization = `Bearer ${token}`;
-  return req;
+  withCredentials: true,
 });
 
 export default API;
