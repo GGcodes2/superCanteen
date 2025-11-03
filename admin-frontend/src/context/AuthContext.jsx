@@ -1,20 +1,17 @@
-import axios from "axios";
 import { createContext, useState } from "react";
+import API from "../api/axios";
 
 export const AuthContext = createContext();
-
-const API = axios.create({
-  baseURL: "https://supercanteen-backend.onrender.com/api", // ✅ important!
-});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const login = async (email, password) => {
-    const res = await API.post("/auth/login", { email, password });
-    localStorage.setItem("token", res.data.token);
-    setUser(res.data.user);
-    return res.data.user;
+    const { data } = await API.post("/api/admin/login", { email, password });
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      setUser(data.admin); // optional, based on your backend response
+    }
   };
 
   const logout = () => {
