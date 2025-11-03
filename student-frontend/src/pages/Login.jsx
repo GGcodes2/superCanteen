@@ -12,7 +12,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/auth/login", { email, password });
+      // ✅ Corrected API route (added /api/)
+      const res = await API.post("/api/auth/login", { email, password });
       login(res.data.user, res.data.token);
       navigate("/menu");
     } catch (err) {
