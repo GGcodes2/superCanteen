@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../api/axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5001");
+const socket = io("https://supercanteen-backend.onrender.com");
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
