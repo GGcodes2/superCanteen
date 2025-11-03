@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
-const AdminLogin = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -18,21 +18,21 @@ const AdminLogin = () => {
 
       const { token, user } = res.data;
 
-      // ✅ Store auth info
+      // Store user info
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // ✅ Check role before redirecting
-      if (user.role === "admin") {
-        window.location.href = "/orders"; // redirect to admin orders page
+      // Redirect based on role
+      if (user.role === "student") {
+        navigate("/menu");
+      } else if (user.role === "admin") {
+        navigate("/admin-dashboard");
       } else {
-        alert("Access denied: Admins only.");
+        navigate("/");
       }
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -40,40 +40,49 @@ const AdminLogin = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200">
       <form
         onSubmit={handleLogin}
-        className="p-8 bg-white rounded-2xl shadow-lg w-full max-w-md border border-gray-100"
+        className="p-8 bg-white rounded-2xl shadow-lg w-full max-w-md border border-gray-100 flex flex-col gap-4"
       >
-        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-          Admin Login
+        <h2 className="text-3xl font-semibold text-center text-gray-800">
+          Login
         </h2>
 
         <input
           type="email"
-          placeholder="Admin Email"
+          placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+          className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none transition-all"
         />
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full mb-6 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+          className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none transition-all"
         />
 
         <button
           type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
+          className="bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-200"
         >
-          {loading ? "Logging in..." : "Login"}
+          Login
         </button>
+
+        <p className="text-center text-gray-600 mt-2">
+          New user?{" "}
+          <Link
+            to="/register"
+            className="text-blue-600 font-medium hover:underline"
+          >
+            Register here
+          </Link>
+        </p>
       </form>
     </div>
   );
 };
 
-export default AdminLogin;
+export default Login;
