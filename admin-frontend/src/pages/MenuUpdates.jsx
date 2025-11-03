@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const MenuUpdates = () => {
@@ -9,13 +9,10 @@ const MenuUpdates = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  // ✅ Hardcoded backend URL (no .env needed)
-  const BASE_URL = "https://supercanteen-backend.onrender.com/api";
-
   // ✅ Fetch menu items
   const fetchMenu = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/menu`);
+      const res = await API.get(`/menu`);
       setItems(res.data.items || []);
     } catch (err) {
       console.error("Error fetching menu:", err);
@@ -27,7 +24,7 @@ const MenuUpdates = () => {
   const handleAdd = async () => {
     if (!newItem.name || !newItem.price) return alert("Fill all fields");
     try {
-      await axios.post(`${BASE_URL}/api/menu/add`, newItem, {
+      await API.post(`/menu/add`, newItem, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Item added!");
@@ -42,8 +39,8 @@ const MenuUpdates = () => {
   // ✅ Toggle availability
   const handleToggle = async (id, available) => {
     try {
-      await axios.put(
-        `${BASE_URL}/api/menu/${id}`,
+      await API.put(
+        `/menu/${id}`,
         { available: !available },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -61,8 +58,8 @@ const MenuUpdates = () => {
     if (!editingItem || !editingItem.price)
       return alert("Please enter a valid price");
     try {
-      await axios.put(
-        `${BASE_URL}/api/menu/${id}`,
+      await API.put(
+        `/menu/${id}`,
         { price: editingItem.price },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -81,7 +78,7 @@ const MenuUpdates = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
     try {
-      await axios.delete(`${BASE_URL}/api/menu/${id}`, {
+      await API.delete(`/menu/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Item deleted!");

@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import API from "../api/axios";
 import { io } from "socket.io-client";
 
-const socket = io("https://supercanteen-backend.onrender.com");
+const SOCKET_URL =
+  import.meta?.env?.VITE_SOCKET_URL || "https://supercanteen-backend.onrender.com";
+const socket = io(SOCKET_URL);
 
 const Menu = () => {
   const [menu, setMenu] = useState([]);

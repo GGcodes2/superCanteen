@@ -5,9 +5,9 @@ import { io } from "socket.io-client";
 
 // ✅ Use environment variable for flexibility (Vercel + local)
 const SOCKET_URL =
-  "https://supercanteen-backend.onrender.com";
+  import.meta?.env?.VITE_SOCKET_URL || "https://supercanteen-backend.onrender.com";
 
-const socket = io("https://supercanteen-backend.onrender.com", {
+const socket = io(SOCKET_URL, {
   transports: ["websocket"],
   withCredentials: true,
 });
