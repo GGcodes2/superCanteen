@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault();
     try {
       // ✅ Fixed endpoint
-      const res = await API.post("/api/auth/login", { email, password });
+      const res = await API.post("/auth/login", { email, password });
 
       // ✅ Save user + token
       login(res.data.user, res.data.token);
