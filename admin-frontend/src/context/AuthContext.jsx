@@ -1,25 +1,24 @@
-import { createContext, useState, useEffect } from "react";
-import API from "../api/axios";
+import axios from "axios";
+import { createContext, useState } from "react";
+
+export const AuthContext = createContext();
+
+const API = axios.create({
+  baseURL: "https://supercanteen-backend.onrender.com/api", // ✅ important!
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) setUser(JSON.parse(stored));
-  }, []);
-
   const login = async (email, password) => {
     const res = await API.post("/auth/login", { email, password });
-    if (res.data.token) {
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      setUser(res.data.user);
-    }
+    localStorage.setItem("token", res.data.token);
+    setUser(res.data.user);
+    return res.data.user;
   };
 
   const logout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
     setUser(null);
   };
 
@@ -29,5 +28,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export const AuthContext = createContext();
