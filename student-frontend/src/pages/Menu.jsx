@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import API from "../api/axios";
 import { io } from "socket.io-client";
 
