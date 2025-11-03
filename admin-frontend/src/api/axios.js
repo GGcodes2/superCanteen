@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://supercanteen-backend.onrender.com",
+  baseURL: "https://supercanteen-backend.onrender.com/api",
 });
 
 API.interceptors.request.use((config) => {
