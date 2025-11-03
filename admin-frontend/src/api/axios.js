@@ -1,16 +1,17 @@
 // src/api/axios.js
 import axios from "axios";
 
+const API_BASE =
+  import.meta?.env?.VITE_API_URL || "https://supercanteen-backend.onrender.com/api";
+
 const API = axios.create({
-  baseURL: "https://supercanteen-backend.onrender.com", // or your backend URL
+  baseURL: API_BASE,
+  withCredentials: false, // set to false unless you need cookies; if using Bearer tokens, keep false
 });
 
-// Attach token to every request automatically
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) req.headers.Authorization = `Bearer ${token}`;
   return req;
 });
 

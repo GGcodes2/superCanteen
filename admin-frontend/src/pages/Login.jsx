@@ -1,8 +1,11 @@
+// src/pages/Login.jsx (admin)
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,9 +15,10 @@ const Login = () => {
     setLoading(true);
     try {
       await login(email, password);
-      window.location.href = "/orders";
+      navigate("/orders"); // admin orders page
     } catch (err) {
-      alert("Invalid credentials");
+      console.error("Login error:", err.response || err.message || err);
+      alert(err.response?.data?.message || err.message || "Login failed");
     } finally {
       setLoading(false);
     }
