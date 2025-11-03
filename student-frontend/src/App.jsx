@@ -4,13 +4,14 @@ import Menu from "./pages/Menu";
 import MyOrders from "./pages/MyOrders";
 import { AuthProvider } from "./context/AuthContext";
 import Register from "./pages/Register";
+import AdminLogin from "./pages/Login";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<AdminLogin />} />
           <Route path="/register" element={<Register/>} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/orders" element={<MyOrders />} />
