@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // 👈 Add this import
+import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5001");
+// ✅ Use environment variable for flexibility (Vercel + local)
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL ||
+  "https://supercanteen-backend.onrender.com/api";
+
+const socket = io(SOCKET_URL, {
+  transports: ["websocket"], // 👈 ensure reliable connection (no polling)
+  withCredentials: true,
+});
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const navigate = useNavigate(); // 👈 React Router navigation hook
+  const navigate = useNavigate();
 
   const fetchOrders = async () => {
     try {
       const res = await API.get("/orders/all");
-      setOrders(res.data.orders);
+      setOrders(res.data.orders || []);
     } catch (err) {
       console.error("Error fetching orders:", err);
     }
@@ -21,17 +29,24 @@ const Orders = () => {
   useEffect(() => {
     fetchOrders();
 
+    // ✅ Handle new orders
     socket.on("orderCreated", (order) => {
       setOrders((prev) => [order, ...prev]);
     });
 
+    // ✅ Handle order updates
     socket.on("orderUpdated", (updatedOrder) => {
       setOrders((prev) =>
         prev.map((o) => (o._id === updatedOrder._id ? updatedOrder : o))
       );
     });
 
-    return () => socket.disconnect();
+    // Cleanup to prevent memory leaks
+    return () => {
+      socket.off("orderCreated");
+      socket.off("orderUpdated");
+      socket.disconnect();
+    };
   }, []);
 
   const updateStatus = async (id, status) => {
@@ -46,31 +61,23 @@ const Orders = () => {
   };
 
   const getStatusColor = (status) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-700";
-      case "preparing":
-        return "bg-blue-100 text-blue-700";
-      case "ready":
-        return "bg-green-100 text-green-700";
-      case "completed":
-        return "bg-gray-200 text-gray-700";
-      case "cancelled":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
+    const colors = {
+      pending: "bg-yellow-100 text-yellow-700",
+      preparing: "bg-blue-100 text-blue-700",
+      ready: "bg-green-100 text-green-700",
+      completed: "bg-gray-200 text-gray-700",
+      cancelled: "bg-red-100 text-red-700",
+    };
+    return colors[status] || "bg-gray-100 text-gray-700";
   };
 
   return (
     <div className="p-6 min-h-screen bg-gray-50">
-      {/* ✅ Header Section */}
+      {/* ✅ Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">
           📦 Orders Dashboard
         </h2>
-
-        {/* 🧭 Button to go to Menu Updates */}
         <button
           onClick={() => navigate("/menu-updates")}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"

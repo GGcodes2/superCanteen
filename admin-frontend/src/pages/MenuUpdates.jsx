@@ -9,10 +9,13 @@ const MenuUpdates = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
+  // ✅ Hardcoded backend URL (no .env needed)
+  const BASE_URL = "https://supercanteen-backend.onrender.com/api";
+
   // ✅ Fetch menu items
   const fetchMenu = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/menu");
+      const res = await axios.get(`${BASE_URL}/api/menu`);
       setItems(res.data.items || []);
     } catch (err) {
       console.error("Error fetching menu:", err);
@@ -24,7 +27,7 @@ const MenuUpdates = () => {
   const handleAdd = async () => {
     if (!newItem.name || !newItem.price) return alert("Fill all fields");
     try {
-      await axios.post("http://localhost:5001/api/menu/add", newItem, {
+      await axios.post(`${BASE_URL}/api/menu/add`, newItem, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Item added!");
@@ -40,7 +43,7 @@ const MenuUpdates = () => {
   const handleToggle = async (id, available) => {
     try {
       await axios.put(
-        `http://localhost:5001/api/menu/${id}`,
+        `${BASE_URL}/api/menu/${id}`,
         { available: !available },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -59,7 +62,7 @@ const MenuUpdates = () => {
       return alert("Please enter a valid price");
     try {
       await axios.put(
-        `http://localhost:5001/api/menu/${id}`,
+        `${BASE_URL}/api/menu/${id}`,
         { price: editingItem.price },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -78,7 +81,7 @@ const MenuUpdates = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
     try {
-      await axios.delete(`http://localhost:5001/api/menu/${id}`, {
+      await axios.delete(`${BASE_URL}/api/menu/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Item deleted!");
