@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion , AnimatePresence } from "framer-motion";
 import API from "../api/axios";
 import { io } from "socket.io-client";
 
-const socket = io("https://supercanteen-backend.onrender.com");
+const socket = io(
+  window.location.hostname.includes("localhost")
+    ? "http://localhost:5001"
+    : "https://supercanteen-backend.onrender.com",
+  {
+    transports: ["websocket", "polling"], // supports both dev + production
+    reconnectionAttempts: 5,
+  }
+);
+
 
 const Menu = () => {
   const [menu, setMenu] = useState([]);
