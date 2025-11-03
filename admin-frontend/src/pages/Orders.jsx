@@ -7,7 +7,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const { data } = await API.get("/api/admin/orders");
+        const { data } = await API.get("/admin/orders");
         setOrders(data);
       } catch (err) {
         console.error(err.response?.data || err.message);
