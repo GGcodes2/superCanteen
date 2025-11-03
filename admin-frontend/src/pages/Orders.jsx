@@ -3,12 +3,9 @@ import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { io } from "socket.io-client";
 
-// ✅ Use env var with sensible dev/prod fallback
+// ✅ Use env var with a safe production fallback (never localhost in builds)
 const SOCKET_URL =
-  import.meta?.env?.VITE_SOCKET_URL ||
-  (import.meta?.env?.MODE === "development"
-    ? "http://localhost:5001"
-    : "https://supercanteen-backend.onrender.com");
+  import.meta?.env?.VITE_SOCKET_URL || "https://supercanteen-backend.onrender.com";
 
 const socket = io(SOCKET_URL);
 
