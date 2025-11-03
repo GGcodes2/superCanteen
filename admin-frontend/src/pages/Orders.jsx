@@ -5,8 +5,7 @@ import { io } from "socket.io-client";
 
 // ✅ Use environment variable for flexibility (Vercel + local)
 const SOCKET_URL =
-  import.meta.env.VITE_SOCKET_URL ||
-  "https://supercanteen-backend.onrender.com/api";
+  "https://supercanteen-backend.onrender.com";
 
 const socket = io(SOCKET_URL, {
   transports: ["websocket"], // 👈 ensure reliable connection (no polling)
