@@ -12,8 +12,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ Corrected API route (added /api/)
+      // ✅ Fixed endpoint
       const res = await API.post("/api/auth/login", { email, password });
+
+      // ✅ Save user + token
       login(res.data.user, res.data.token);
       navigate("/menu");
     } catch (err) {
