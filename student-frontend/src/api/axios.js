@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5001/api",
+  baseURL: "https://supercanteen-backend.onrender.com",
 });
 
 // Add token to headers automatically
